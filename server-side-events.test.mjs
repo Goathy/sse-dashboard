@@ -12,8 +12,7 @@ it('consume stream in EventSource format', async (t) => {
     await fastify.close()
   })
 
-  fastify.get('/test', async (_, reply) => {
-    console.log('kaczka')
+  fastify.get('/sse', async (_, reply) => {
     reply.raw.writeHead(200, {
       'Content-Type': 'text/event-stream',
       Connection: 'keep-alive',
@@ -30,7 +29,7 @@ it('consume stream in EventSource format', async (t) => {
 
   await fastify.listen()
 
-  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/test', { method: 'GET' })
+  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/sse', { method: 'GET' })
 
   const responseBody = []
 
