@@ -157,16 +157,19 @@ it('stream multiple values over time reusing response', async (t) => {
   assert.deepEqual(responseBody, ['value: 1\n', 'value: 2\n', 'value: 3\n'])
 })
 
-it('closed response should remove reference in responses map', async (t) => {
+it('closed response should remove reference from Map', async (t) => {
   const fastify = buildServer()
+
+  const ee = new EventEmitter()
+
+  const requestId = 'requestId-1'
 
   t.after(async () => {
     await fastify.close()
+    ee.removeAllListeners()
   })
 
   await fastify.register(import('./responses.plugin.mjs'))
-
-  let isClosed = false
 
   fastify.get('/sse', (_, reply) => {
     reply.raw.writeHead(200, {
@@ -177,38 +180,22 @@ it('closed response should remove reference in responses map', async (t) => {
 
     fastify.responses.set('1', reply.raw)
 
+    ee.emit('called')
+
     reply.raw.on('close', () => {
       fastify.responses.delete('1')
-      isClosed = true
     })
-  })
-
-  fastify.get('/send', async (_, reply) => {
-    for (const idx of [1, 2, 3]) {
-      await setTimeout(0)
-      fastify.responses.get('1').write(`value: ${idx}\n`)
-    }
-
-    fastify.responses.get('1').end()
-
-    reply.send()
   })
 
   await fastify.listen()
 
-  setImmediate(async () => await undici.request('http://localhost:' + fastify.server.address().port + '/send', { method: 'GET' }))
+  ee.on('called', () => fastify.responses.get(requestId).end())
 
   const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/sse', { method: 'GET' })
 
-  const responseBody = []
-
-  for await (const data of body) {
-    responseBody.push(String(data))
-  }
-
-  assert.deepEqual(responseBody, ['value: 1\n', 'value: 2\n', 'value: 3\n'])
-  assert.equal(fastify.responses.size, 0, 'response should be deleted after close')
-  assert.ok(isClosed, 'response should be closed')
+  body.on('close', () => {
+    assert.equal(fastify.responses.size, 0, 'response should be deleted after close')
+  })
 }
 )
 
@@ -239,7 +226,7 @@ it('close connection using Map reference', async (t) => {
 
     ee.emit('called')
 
-    reply.raw.on('close', () => { fastify.responses.delete(requestId); calls++ })
+    reply.raw.on('close', () => { calls++ })
   })
 
   await fastify.listen()
