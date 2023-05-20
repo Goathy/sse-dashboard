@@ -22,13 +22,13 @@ it('access response usinig undici', async (t) => {
     await fastify.close()
   })
 
-  fastify.get('/test', (_, reply) => {
+  fastify.get('/sse', (_, reply) => {
     reply.send({ Hello: 'World' })
   })
 
   await fastify.listen()
 
-  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/test', { method: 'GET' })
+  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/sse', { method: 'GET' })
 
   let calls = 0
   let responseBody = ''
@@ -49,7 +49,7 @@ it('check response using raw response', async (t) => {
     await fastify.close()
   })
 
-  fastify.get('/test', (_, reply) => {
+  fastify.get('/sse', (_, reply) => {
     const response = '{"Hello":"World"}'
     reply.raw.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
@@ -61,7 +61,7 @@ it('check response using raw response', async (t) => {
 
   await fastify.listen()
 
-  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/test', { method: 'GET' })
+  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/sse', { method: 'GET' })
 
   let calls = 0
   let responseBody = ''
@@ -82,7 +82,7 @@ it('stream multiple values over time', async (t) => {
     await fastify.close()
   })
 
-  fastify.get('/test', async (_, reply) => {
+  fastify.get('/sse', async (_, reply) => {
     reply.raw.writeHead(200, {
       'Content-Type': 'text/event-stream',
       Connection: 'keep-alive',
@@ -99,7 +99,7 @@ it('stream multiple values over time', async (t) => {
 
   await fastify.listen()
 
-  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/test', { method: 'GET' })
+  const { body } = await undici.request('http://localhost:' + fastify.server.address().port + '/sse', { method: 'GET' })
 
   const responseBody = []
 
