@@ -1,3 +1,5 @@
+'use strict'
+
 import fastify from 'fastify'
 import { join } from 'node:path'
 import { cwd } from 'node:process'
@@ -18,7 +20,7 @@ function random (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-server.get('/sse', async (_, reply) => {
+server.get('/sse', (_, reply) => {
   reply.raw.writeHead(200, {
     'Content-Type': 'text/event-stream; charset=utf-8',
     Connection: 'keep-alive',

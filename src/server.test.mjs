@@ -1,3 +1,5 @@
+'use strict'
+
 import assert from 'node:assert'
 import { it } from 'node:test'
 import undici from 'undici'
