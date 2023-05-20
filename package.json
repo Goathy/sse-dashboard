@@ -1,0 +1,22 @@
+{
+  "name": "sse-dashboard",
+  "version": "0.0.1",
+  "description": "Real time dashboard using EventSource & ChartJS",
+  "main": "index.js",
+  "author": "Jakub Gałecki <goathy.dev@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^20.2.1",
+    "standard": "^17.0.0",
+    "undici": "^5.22.1"
+  },
+  "dependencies": {
+    "fastify": "^4.17.0",
+    "fastify-plugin": "^4.5.0"
+  },
+  "scripts": {
+    "test": "node --test --test-reporter tap",
+    "lint:fix": "standard --fix ."
+  }
+}
