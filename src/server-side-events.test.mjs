@@ -16,7 +16,7 @@ it('consume stream in EventSource format', async (t) => {
 
   fastify.get('/sse', async (_, reply) => {
     reply.raw.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream; charset=utf-8',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache'
     })

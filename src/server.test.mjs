@@ -88,7 +88,7 @@ it('stream multiple values over time', async (t) => {
 
   fastify.get('/sse', async (_, reply) => {
     reply.raw.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream; charset=utf-8',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache'
     })
@@ -125,7 +125,7 @@ it('stream multiple values over time reusing response', async (t) => {
 
   fastify.get('/sse', (_, reply) => {
     reply.raw.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream; charset=utf-8',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache'
     })
@@ -175,7 +175,7 @@ it('closed response should remove reference from Map', async (t) => {
 
   fastify.get('/sse', (_, reply) => {
     reply.raw.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream; charset=utf-8',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache'
     })
@@ -219,7 +219,7 @@ it('close connection using Map reference', async (t) => {
 
   fastify.get('/sse', (_, reply) => {
     reply.raw.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream; charset=utf-8',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache'
     })
