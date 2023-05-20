@@ -22,8 +22,6 @@ it('access response usinig undici', async (t) => {
     await fastify.close()
   })
 
-  await fastify.register(import('./requests.plugin.mjs'))
-
   fastify.get('/test', (_, reply) => {
     reply.send({ Hello: 'World' })
   })
@@ -50,8 +48,6 @@ it('check response using raw response', async (t) => {
   t.after(async () => {
     await fastify.close()
   })
-
-  await fastify.register(import('./requests.plugin.mjs'))
 
   fastify.get('/test', (_, reply) => {
     const response = '{"Hello":"World"}'
@@ -85,8 +81,6 @@ it('stream multiple values over time', async (t) => {
   t.after(async () => {
     await fastify.close()
   })
-
-  await fastify.register(import('./requests.plugin.mjs'))
 
   fastify.get('/test', async (_, reply) => {
     reply.raw.writeHead(200, {
